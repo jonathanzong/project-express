@@ -22,6 +22,7 @@ function setup() {
 var pointBegin, point1, point2, pointEnd;
 function draw() {
   clear();
+  background('black');
   // if (mouseIsPressed) {
   
   // }

@@ -1,0 +1,42 @@
+<script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.21/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.7/socket.io.min.js"></script>
+
+<script type="text/javascript">
+'use strict';
+
+// socket io
+var socket = io.connect('http://localhost:3000/');
+
+var dotDiameter, r, g, b;
+
+// canvas script
+function setup() {
+  createCanvas(window.innerWidth, window.innerHeight);
+  noStroke();
+  dotDiameter = Math.random() * 15 + 10;
+  r = Math.random() * 56 + 200;
+  g = Math.random() * 56 + 200;
+  b = Math.random() * 56 + 200;
+}
+
+function draw() {
+  socket.emit('point', {
+    x: mouseX,
+    y: mouseY,
+    dotDiameter: dotDiameter,
+    color: {
+      r: r,
+      g: g,
+      b: b,
+      a: 255
+    }
+  });
+}
+
+function mousePressed() {
+  dotDiameter = Math.random() * 15 + 10;
+  r = Math.random() * 56 + 200;
+  g = Math.random() * 56 + 200;
+  b = Math.random() * 56 + 200;
+}
+</script>
