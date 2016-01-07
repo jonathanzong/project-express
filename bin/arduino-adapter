@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+var five = require("johnny-five");
+var board = new five.Board();
+var io = require('socket.io-client');
+
+board.on("ready", function() {
+  // do this?
+  var pwm = new five.Pin(11);
+  var dir = new five.Pin(13);
+
+  // or... this?
+  var motor = new five.Motor({
+    pins: {
+      pwm: 3,
+      dir: 12
+    }
+  });
+
+  var socket = io('http://localhost:3000');
+
+  socket.on('point-client', function (data) {
+    // console.log(data);
+    // translate to pin pulses
+
+  });
+});

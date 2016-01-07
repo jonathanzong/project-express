@@ -21,7 +21,6 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-
 // sockets
 var io = require('socket.io')(server);
 io.on('connection', function (socket) {
