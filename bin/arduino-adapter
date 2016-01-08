@@ -1,69 +1,68 @@
 #!/usr/bin/env node
 
-var five = require("johnny-five");
-var board = new five.Board();
+var serialport = require("serialport");
 var io = require('socket.io-client');
 
-board.on("ready", function() {
-  var enable = new five.Pin(9); // input enable
-  enable.high();
-
-  //
-  var stepper = new five.Stepper({
-    type: five.Stepper.TYPE.DRIVER,
-    stepsPerRev: 200,
-    pins: {
-      step: 11,
-      dir: 10
-    }
+serialport.list(function (err, ports) {
+  ports.forEach(function(port) {
+    console.log(port.comName);
   });
-  //
+});
 
-  process.stdin.resume();
-  process.stdin.setEncoding("utf8");
-  process.stdin.setRawMode(true);
+var serial = new serialport.SerialPort("/dev/cu.usbmodem1411", {
+  baudrate: 9600
+});
 
-  process.stdin.on("keypress", function(ch, key) {
-    if (!key) {
-      return;
-    }
+var socket = io('http://localhost:3000');
 
-    if (key.name === "q") {
-      console.log("uitting");
-      process.exit();
-    } else if (key.name === "up") {
-      console.log("CW");
-      stepper.rpm(800).cw().step(2000, function() {
-        console.log("done");
-      });
-    } else if (key.name === "down") {
-      console.log("CCW");
-      stepper.rpm(800).ccw().step(2000, function() {
-        console.log("done");
-      });
-    } else if (key.name === "space") {
-      console.log("Stopping");
-      servo.stop();
-    }
-  });
+var lastData, dx, dy, xdir, ydir, line;
 
-
-
-
-  // hello
-  var led = new five.Led(13);
-
-  // "blink" the led in 500ms on-off phase periods
-  led.blink(500);
-
-/*
-  var socket = io('http://localhost:3000');
+serial.on("open", function () {
+  console.log('serial opened');
 
   socket.on('point-client', function (data) {
     // console.log(data);
     // translate to pin pulses
     // TODO
+    if (lastData) {
+      dx = data.x - lastData.x;
+      dy = data.y - lastData.y;
+
+      xdir = dx < 0 ? 1 : 0; // TODO check this
+      ydir = dy < 0 ? 1 : 0; // TODO check this
+
+      if (dx || dy) {
+        line = xdir + " " + ydir + " " + Math.abs(dx) + " " + Math.abs(dy);
+        console.log(line);
+
+        serial.write(line + "\n", function(err, results) {
+          if (err)
+            console.log('err ' + err);
+          console.log('results ' + results);
+        });
+      }
+    }
+    lastData = data;
   });
-*/
+
+  process.stdin.resume();//so the program will not close instantly
+
+  function exitHandler(options, err) {
+      if (options.cleanup) {
+        console.log("serial closed");
+        serial.close();
+      }
+      if (err) console.log(err.stack);
+      if (options.exit) process.exit();
+  }
+
+  //do something when app is closing
+  process.on('exit', exitHandler.bind(null,{cleanup:true}));
+
+  //catches ctrl+c event
+  process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+  //catches uncaught exceptions
+  process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
 
 });
