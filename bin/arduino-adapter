@@ -5,23 +5,65 @@ var board = new five.Board();
 var io = require('socket.io-client');
 
 board.on("ready", function() {
-  // do this?
-  var pwm = new five.Pin(11);
-  var dir = new five.Pin(13);
+  var enable = new five.Pin(9); // input enable
+  enable.high();
 
-  // or... this?
-  var motor = new five.Motor({
+  //
+  var stepper = new five.Stepper({
+    type: five.Stepper.TYPE.DRIVER,
+    stepsPerRev: 200,
     pins: {
-      pwm: 3,
-      dir: 12
+      step: 11,
+      dir: 10
+    }
+  });
+  //
+
+  process.stdin.resume();
+  process.stdin.setEncoding("utf8");
+  process.stdin.setRawMode(true);
+
+  process.stdin.on("keypress", function(ch, key) {
+    if (!key) {
+      return;
+    }
+
+    if (key.name === "q") {
+      console.log("uitting");
+      process.exit();
+    } else if (key.name === "up") {
+      console.log("CW");
+      stepper.rpm(800).cw().step(2000, function() {
+        console.log("done");
+      });
+    } else if (key.name === "down") {
+      console.log("CCW");
+      stepper.rpm(800).ccw().step(2000, function() {
+        console.log("done");
+      });
+    } else if (key.name === "space") {
+      console.log("Stopping");
+      servo.stop();
     }
   });
 
+
+
+
+  // hello
+  var led = new five.Led(13);
+
+  // "blink" the led in 500ms on-off phase periods
+  led.blink(500);
+
+/*
   var socket = io('http://localhost:3000');
 
   socket.on('point-client', function (data) {
     // console.log(data);
     // translate to pin pulses
-
+    // TODO
   });
+*/
+
 });
