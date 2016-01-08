@@ -24,7 +24,7 @@ var server = http.createServer(app);
 // sockets
 var io = require('socket.io')(server);
 io.on('connection', function (socket) {
-  console.log("hi")
+  console.log("client connected: " + socket.id);
   socket.on('point', function (data) {
     // TODO parse it into a js object
     // store it into a DB, whatever else you gotta do

@@ -15,17 +15,13 @@ var tailLength = 10;
 var queue = [];
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight, 'p2d');
-  
+  createCanvas(window.innerWidth, window.innerHeight);
 }
 
 var pointBegin, point1, point2, pointEnd;
 function draw() {
   clear();
   background('black');
-  // if (mouseIsPressed) {
-  
-  // }
   
   // delete oldest points
   while (queue.length > tailLength) queue.shift();
