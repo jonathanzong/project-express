@@ -12,16 +12,19 @@ html, body {
 // socket io
 var socket = io.connect('http://localhost:3000/');
 
-var dotDiameter, r, g, b;
+var dotDiameter, r, g, b, flow, colorIdx;
 
 // canvas script
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   noStroke();
   dotDiameter = Math.random() * 15 + 10;
+  // TODO correlate this to the colorIdx
   r = Math.random() * 156 + 100;
   g = Math.random() * 156 + 100;
   b = Math.random() * 156 + 100;
+  flow = 0;
+  colorIdx = 0;
 }
 
 function draw() {
@@ -34,7 +37,9 @@ function draw() {
       g: g,
       b: b,
       a: 255
-    }
+    },
+    colorIdx: colorIdx,
+    flow: flow
   });
 }
 
@@ -43,5 +48,23 @@ function mousePressed() {
   r = Math.random() * 156 + 100;
   g = Math.random() * 156 + 100;
   b = Math.random() * 156 + 100;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    flow+=10;
+    if (flow > 100) flow = 100;
+    return false;
+  }
+  if (keyCode === DOWN_ARROW) {
+    flow-=10;
+    if (flow < 0) flow = 0;
+    return false;
+  }
+  if (parseInt(key) || key === '0') {
+    colorIdx = parseInt(key) * 2;
+    return false;
+  }
+  return true;
 }
 </script>

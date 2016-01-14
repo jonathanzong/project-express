@@ -27,11 +27,14 @@ serial.on("open", function () {
       dx = data.x - lastData.x;
       dy = data.y - lastData.y;
 
-      if (dx || dy) {
+      if (data.flow !== lastData.flow || 
+        data.colorIdx !== lastData.colorIdx || 
+        dx || dy) {
         xdir = dx < 0 ? 1 : 0; // TODO check this
         ydir = dy < 0 ? 1 : 0; // TODO check this
 
-        line = xdir + " " + ydir + " " + Math.abs(dx) + " " + Math.abs(dy);
+        line = xdir + " " + ydir + " " + Math.abs(dx) + " " + Math.abs(dy) +
+          " " + data.colorIdx + " " + data.flow;
         console.log(line);
 
         serial.write(line + "\n", function(err, results) {

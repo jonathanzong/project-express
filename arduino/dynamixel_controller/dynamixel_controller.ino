@@ -22,7 +22,7 @@ DynamixelMotor motor3(interface, 3);
 
 void paintEnable(boolean on) {
   if (on) {
-    motor2.position(ccwlimit2);
+    motor2.position(ccwlimit2); 
   }
   else {
     motor2.position(cwlimit2);
@@ -96,19 +96,20 @@ void loop()
 //  motor2.led(true);
 //  motor3.led(true);
 
-  paintEnable(true);
+//  paintEnable(true);
+  motor2.position(ccwlimit2);
 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 100; i+=10) {
     flowSet(i);
     delay(100);
   }
 
-  for (int i = 0; i < 17; i++) {
+  for (int i = 4; i < 7; i++) {
     motor1.led(true);
     colorSelect(i);
-    delay(500);
+    delay(1000);
     motor1.led(false);
-    delay(500);
+    delay(1000);
   }
   flowSet(0);
 
