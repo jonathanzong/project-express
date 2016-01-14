@@ -1,13 +1,13 @@
-//#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 #include "DynamixelMotor.h"
 
 int16_t speed=256;
 
-DynamixelInterface &interface=*createSerialInterface(Serial);
+//DynamixelInterface &interface=*createSerialInterface(Serial);
 // Use this if you use a direction pin with 3-state buffer
 //DynamixelInterface &interface=*createSerialInterface(Serial, 2);
 // Use this if you want a sofware serial interface (communication speed will be limited)
-//DynamixelInterface &interface=*createSoftSerialInterface(2,3);
+DynamixelInterface &interface=*createSoftSerialInterface(2,3);
 
 int cwlimit1 = 65;
 int ccwlimit1 = 915;
@@ -98,23 +98,20 @@ void loop()
 
   paintEnable(true);
 
-//  for (int i = 0; i < 17; i++) {
-//    motor1.led(true);
-//    colorSelect(i);
-//    delay(500);
-//    motor1.led(false);
-//    delay(500);
-//  }
-
-  for (int i = 1; i < 100; i+=5) {
-    motor3.led(true);
+  for (int i = 0; i < 100; i++) {
     flowSet(i);
-    delay(100);
-    motor3.led(false);
     delay(100);
   }
 
-    flowSet(100);
+  for (int i = 0; i < 17; i++) {
+    motor1.led(true);
+    colorSelect(i);
+    delay(500);
+    motor1.led(false);
+    delay(500);
+  }
+  flowSet(0);
+
   delay(2000);
   
 //  paintEnable(true);
