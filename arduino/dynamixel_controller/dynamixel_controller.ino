@@ -46,6 +46,7 @@ void flowSet(int percent) {
 
 void setup()
 { 
+  Serial.begin(9600);
   delay(100);
   interface.begin(57142);
   delay(100);
@@ -96,8 +97,7 @@ void loop()
 //  motor2.led(true);
 //  motor3.led(true);
 
-//  paintEnable(true);
-  motor2.position(ccwlimit2);
+  paintEnable(true);
 
   for (int i = 0; i < 100; i+=10) {
     flowSet(i);
@@ -114,20 +114,5 @@ void loop()
   flowSet(0);
 
   delay(2000);
-  
-//  paintEnable(true);
-//  motor3.position(256);
-  
-//  delay(1000);
-//  
-//  motor1.led(false);
-//  motor2.led(false);
-//  motor3.led(false);
-//  
-//  motor1.position(200);
-//  paintEnable(false);
-//  motor3.position(808);
-  
-//  delay(1000);
 }
 

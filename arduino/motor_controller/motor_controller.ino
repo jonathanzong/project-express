@@ -22,6 +22,7 @@ DynamixelMotor motor1(interface, 1);
 DynamixelMotor motor2(interface, 2);
 DynamixelMotor motor3(interface, 3);
 
+//
 void setup() {
   Serial.begin(9600);
 
@@ -100,10 +101,18 @@ void flowSet(int percent) {
   }
 }
 //
+unsigned long lastReceivedAt;
 
 void loop() {
+  // 5 second timeout if no serial command received
+  if (millis() - lastReceivedAt > 5000) {
+      flowSet(0);
+      delay(100);
+      paintEnable(false);
+  }
 
   while (Serial.available() > 0) {
+    lastReceivedAt = millis();
     // parse out values
     int xdir = Serial.parseInt();
     int ydir = Serial.parseInt();
@@ -128,15 +137,16 @@ void loop() {
 
       // dynamixel signals
       motor1.led(true);
-      delay(100);
-      motor1.led(false);
-      delay(100);
+      delay(10);
       colorSelect(colorIdx);
-      delay(100);
-      paintEnable(flow > 0);
-      delay(100);
+      delay(10);
+      paintEnable(flow > 0); // in case it was off, turn it on before flow
+      delay(10);
       flowSet(flow);
-      delay(100);
+      delay(10);
+      paintEnable(flow > 0); // if it was on, turn it off after flow
+      delay(10);
+      motor1.led(false);
     }
   }
 }
