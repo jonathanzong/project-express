@@ -86,6 +86,7 @@ void paintEnable(boolean on) {
   }
 }
 
+// each index is a half step
 void colorSelect(int index) {
   if (index < 0 || index >= 17) return;
   motor1.position(cwlimit1 + (index * ((ccwlimit1 - cwlimit1)/16)));
@@ -102,6 +103,7 @@ void flowSet(int percent) {
 }
 //
 unsigned long lastReceivedAt;
+int stepScale = 8;
 
 void loop() {
   // 5 second timeout if no serial command received
@@ -129,7 +131,7 @@ void loop() {
       else {
         digitalWrite(dirpin, LOW);
       }
-      for (int i = 0; i < dx; i++) {
+      for (int i = 0; i < dx * stepScale; i++) {
         digitalWrite(steppin, LOW);
         digitalWrite(steppin, HIGH);
       }

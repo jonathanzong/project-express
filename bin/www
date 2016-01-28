@@ -21,7 +21,9 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-// sockets
+/**
+ * Creat Socket server
+ */
 var io = require('socket.io')(server);
 io.on('connection', function (socket) {
   console.log("client connected: " + socket.id);

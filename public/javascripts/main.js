@@ -9,7 +9,6 @@ socket.on('point-client', function (data) {
 });
 
 // canvas script
-
 var tailLength = 10;
 
 var queue = [];
@@ -47,6 +46,5 @@ function draw() {
       point1.x, point1.y,
       point2.x, point2.y,
       pointEnd.x, pointEnd.y);
-     // point.color.a = point.color.a - (255/tailLength);
   }
 }
