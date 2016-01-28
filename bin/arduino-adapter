@@ -28,23 +28,18 @@ serial.on("open", function () {
       dx = data.x - lastData.x;
       dy = data.y - lastData.y;
 
-      // TODO maybe this deduplication belongs in the socket server, not the adapter
-      if (data.flow !== lastData.flow || 
-        data.colorIdx !== lastData.colorIdx || 
-        dx || dy) {
-        xdir = dx < 0 ? 1 : 0; // TODO double check direction
-        ydir = dy < 0 ? 1 : 0; // TODO double check direction
+      xdir = dx < 0 ? 1 : 0; // TODO double check direction
+      ydir = dy < 0 ? 1 : 0; // TODO double check direction
 
-        line = xdir + " " + ydir + " " + Math.abs(dx) + " " + Math.abs(dy) +
-          " " + data.colorIdx + " " + data.flow;
-        console.log(line);
+      line = xdir + " " + ydir + " " + Math.abs(dx) + " " + Math.abs(dy) +
+        " " + data.colorIdx + " " + data.flow;
+      console.log(line);
 
-        serial.write(line + "\n", function(err, results) {
-          if (err) {
-            console.error('err ' + err);
-          }
-        });
-      }
+      serial.write(line + "\n", function(err, results) {
+        if (err) {
+          console.error('err ' + err);
+        }
+      });
     }
     lastData = data;
   });

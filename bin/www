@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('airbrush-controller:server');
+var debug = require('debug')('project-express:server');
 var http = require('http');
 
 /**
@@ -21,16 +21,51 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+// checks equivalence of objects by property values, not reference
+function isEquivalent(a, b) {
+  // Create arrays of property names
+  var aProps = Object.getOwnPropertyNames(a);
+  var bProps = Object.getOwnPropertyNames(b);
+
+  if (aProps.length != bProps.length) {
+    return false;
+  }
+
+  for (var i = 0; i < aProps.length; i++) {
+    var propName = aProps[i];
+    if (typeof a[propName] === 'object') {
+      if (typeof b[propName] === 'object') {
+        if (!isEquivalent(a[propName], b[propName])) {
+          return false;
+        }
+      }
+      else {
+        return false;
+      }
+    }
+    else if (a[propName] !== b[propName]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 /**
  * Creat Socket server
  */
 var io = require('socket.io')(server);
 io.on('connection', function (socket) {
   console.log("client connected: " + socket.id);
+
+  var lastData = {};
   socket.on('point', function (data) {
     // TODO parse it into a js object
     // store it into a DB, whatever else you gotta do
-    socket.broadcast.emit('point-client', data); // see main.js
+    if (!isEquivalent(lastData, data)) {
+      socket.broadcast.emit('point-client', data); // see main.js
+    }
+    lastData = data;
   });
 });
 
