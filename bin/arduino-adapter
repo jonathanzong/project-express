@@ -24,14 +24,16 @@ serial.on("open", function () {
   socket.on('point-client', function (data) {
     // console.log(data);
     if (lastData) {
+      // TODO instead of deltas, calibrate and use absolute
       dx = data.x - lastData.x;
       dy = data.y - lastData.y;
 
+      // TODO maybe this deduplication belongs in the socket server, not the adapter
       if (data.flow !== lastData.flow || 
         data.colorIdx !== lastData.colorIdx || 
         dx || dy) {
-        xdir = dx < 0 ? 1 : 0; // TODO check this
-        ydir = dy < 0 ? 1 : 0; // TODO check this
+        xdir = dx < 0 ? 1 : 0; // TODO double check direction
+        ydir = dy < 0 ? 1 : 0; // TODO double check direction
 
         line = xdir + " " + ydir + " " + Math.abs(dx) + " " + Math.abs(dy) +
           " " + data.colorIdx + " " + data.flow;
