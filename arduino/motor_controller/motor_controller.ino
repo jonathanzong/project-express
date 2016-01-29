@@ -9,7 +9,7 @@ int steppin = 11;
 //dynamixel vars
 int16_t speed=256;
 
-DynamixelInterface &interface=*createSoftSerialInterface(2,3);
+DynamixelInterface &interface=*createSoftSerialInterface(2,3); // RX, TX
 
 int cwlimit1 = 65;
 int ccwlimit1 = 915;
